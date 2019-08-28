@@ -1,0 +1,22 @@
+{
+  "name": "node.js-react-everydayplanner",
+  "version": "1.0.0",
+  "description": "Everyday Planner made with Node.js, React",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skqoaudgh/Node.js-React-EverydayPlanner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skqoaudgh/Node.js-React-EverydayPlanner/issues"
+  },
+  "homepage": "https://github.com/skqoaudgh/Node.js-React-EverydayPlanner#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
