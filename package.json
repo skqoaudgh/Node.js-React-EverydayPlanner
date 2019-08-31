@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/skqoaudgh/Node.js-React-EverydayPlanner#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "bcrypt-nodejs": "0.0.3",
+    "connect-flash": "^0.1.1",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.11"
   }
 }
