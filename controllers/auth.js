@@ -44,7 +44,7 @@ module.exports = async (req, res, next) => {
                 throw new Error('Password is incorrect.');
             }
     
-            const token = jwt.sign({userId: user.ID, userEmail: user.Email}, 'somesupersecretkey', {
+            const token = jwt.sign({userId: user.id, userEmail: user.Email}, 'somesupersecretkey', {
                 expiresIn: '1h',
             });
     
