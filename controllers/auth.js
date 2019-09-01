@@ -12,15 +12,16 @@ module.exports = async (req, res, next) => {
             if(existedUser) {
                 throw new Error('ID exists already.');
             }
-            const hashedPassword = await bcrypt.hash(pw, 12);
-    
+
+            const hashedPassword = await bcrypt.hashSync(pw);
+
             const user = new User({
                 ID: id,
                 Password: hashedPassword,
                 Email: email
             });
-    
-            return await user.save();
+            
+            return res.status(200).json(await user.save());
         }
         catch(err) {
             throw err;
@@ -37,7 +38,7 @@ module.exports = async (req, res, next) => {
                 throw new Error('ID not exists.');
             }
 
-            const isEqual = await bcrypt.compare(pw, user.Password);
+            const isEqual = await bcrypt.compareSync(pw, user.Password);
             if(!isEqual) {
                 throw new Error('Password is incorrect.');
             }
@@ -46,7 +47,7 @@ module.exports = async (req, res, next) => {
                 expiresIn: '1h',
             });
     
-            return token;
+            return res.status(200).json({token: token});
         }
         catch(err) {
             throw err;
