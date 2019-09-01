@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt-nodejs');
+const jwt = require('jsonwebtoken');
 
 module.exports = async (req, res, next) => {
     if(req.body.type == 'REGIST') {
@@ -47,7 +48,7 @@ module.exports = async (req, res, next) => {
                 expiresIn: '1h',
             });
     
-            return res.status(200).json({token: token});
+            return res.status(200).json({token: 'bearer ' + token});
         }
         catch(err) {
             throw err;

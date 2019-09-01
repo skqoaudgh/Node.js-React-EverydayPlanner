@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 
 const app = express();
 
+const isAuth = require('./middleware/isAuth');
 const authRouter = require('./routers/auth');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use(isAuth);
 app.use('/auth', authRouter);
 
 app.get('/', (req, res, next) => {
