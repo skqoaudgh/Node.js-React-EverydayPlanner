@@ -12,7 +12,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use(isAuth);
 app.use('/auth', authRouter);
-app.use('/my', planRouter);
+app.use('/planner', planRouter);
 
 app.get('/', (req, res, next) => {
     res.send('Hello World!');

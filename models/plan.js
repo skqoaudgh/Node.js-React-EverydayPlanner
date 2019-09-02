@@ -25,6 +25,10 @@ const planSchema = new Schema({
     IsDone: {
         type: Boolean,
         required: true
+    },
+    Marker: {
+        type: String,
+        required: true
     }
 });
 
