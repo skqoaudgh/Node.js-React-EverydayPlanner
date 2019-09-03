@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/authContext';
 
+import AuthPage from './pages/Auth';
+
 import './App.css';
 
 class App extends Component {
@@ -33,9 +35,10 @@ class App extends Component {
             logout: this.logout
           }}>
           <MainNavigation />
-          <main class="main-content">
+          <main className="main-content">
             <Switch>
-
+              {!this.state.token && <Route path="/auth" component={AuthPage}/>}
+              {!this.state.token && <Redirect to="/auth" exact/>}
             </Switch>
           </main>
         </AuthContext.Provider>

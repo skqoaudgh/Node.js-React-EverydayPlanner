@@ -11,7 +11,12 @@ module.exports = async (req, res, next) => {
     
             const existedUser = await User.findOne({ID: id});
             if(existedUser) {
-                throw new Error('ID exists already.');
+                return res.status(200).json({error: 'ID'});
+            }
+
+            const existedEmail = await User.findOne({Email: email});
+            if(existedEmail) {
+                return res.status(200).json({error: 'Email'});
             }
 
             const hashedPassword = await bcrypt.hashSync(pw);
@@ -36,19 +41,19 @@ module.exports = async (req, res, next) => {
     
             const user = await User.findOne({ID: id});
             if(!user) {
-                throw new Error('ID not exists.');
+                return res.status(200).json({error: 'LoginFail'});
             }
 
             const isEqual = await bcrypt.compareSync(pw, user.Password);
             if(!isEqual) {
-                throw new Error('Password is incorrect.');
+                return res.status(200).json({error: 'LoginFail'});
             }
     
             const token = jwt.sign({userId: user.id, userEmail: user.Email}, 'somesupersecretkey', {
                 expiresIn: '1h',
             });
     
-            return res.status(200).json({token: 'bearer ' + token});
+            return res.status(200).json({userId: user.id, token: 'bearer ' + token});
         }
         catch(err) {
             throw err;
