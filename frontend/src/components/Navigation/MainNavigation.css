@@ -50,6 +50,8 @@
     cursor: pointer;
     vertical-align: middle;
     margin: 0;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 .main-navigation__item a:hover,
