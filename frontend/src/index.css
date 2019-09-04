@@ -45,3 +45,10 @@ body {
     background-color: #509235;
     border-color: #509235;
 }
+
+.spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20rem;
+}
