@@ -110,7 +110,7 @@ class AuthPage extends Component {
                 );
             }
             else if(!this.state.isLogin && resData._id) {
-                this.setState({signupSuccess: true});
+                this.setState({isFail: 0, signupSuccess: true});
             }
         })
         .catch(err => {
@@ -176,14 +176,14 @@ class AuthPage extends Component {
                         <div id="container-body">
                             <form className="auth-form" onSubmit={this.submitHandler}>
                                 <div className="form-control">
-                                    <input type="text" id="text" placeholder="Username" ref={this.idEl} />
+                                    <input type="text" id="text" placeholder="Username" ref={this.idEl} autoComplete="off" />
                                 </div>
                                 {!this.state.isLogin && 
                                 <div className="form-control">
-                                    <input type="email" id="email" placeholder="Email" ref={this.emailEl} />
+                                    <input type="email" id="email" placeholder="Email" ref={this.emailEl} autoComplete="off" />
                                 </div>}
                                 <div className="form-control">
-                                    <input type="password" id="password" placeholder="Password" ref={this.passwordEl} />
+                                    <input type="password" id="password" placeholder="Password" ref={this.passwordEl} autoComplete="off" />
                                 </div>
                                 <div id="auth-submit">
                                     <button type="submit">{this.state.isLogin ? 'SIGN IN' : 'SIGN UP'}</button>
