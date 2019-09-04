@@ -37,7 +37,7 @@ module.exports = {
             });
             await newPlan.save();
             
-            return res.status(200).json({result: 'done'});
+            return res.status(201).json({result: 'done'});
         }
         catch(err) {
             throw err;

@@ -27,7 +27,7 @@ module.exports = async (req, res, next) => {
                 Email: email
             });
             
-            return res.status(200).json(await user.save());
+            return res.status(201).json(await user.save());
         }
         catch(err) {
             throw err;
