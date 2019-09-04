@@ -1,0 +1,67 @@
+#planner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8rem;
+}
+
+.planner {
+    width: 600px;
+    height: auto;
+    border: none;
+    box-shadow: 0 0 12px 2px #c7c7c7;
+}
+
+#plan-container {
+    width: 600px;
+    height: auto;
+    padding-bottom: 2rem;
+    border: none;
+    box-shadow: 0 0 12px 2px #c7c7c7;
+}
+
+#plan-container > h1 {
+    text-transform: uppercase;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    margin: 2rem 0 0 2rem;
+}
+
+#plan-container > hr {
+    width: 550px;
+}
+
+#plan-container span {
+    margin: 3rem;
+}
+
+#plan-container #plan-addBtn-Container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+}
+
+#plan-addBtn-Container #plan-addBtn {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    background: #6fb554;
+    color: white;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+    line-height: 25px;
+    cursor: pointer;
+
+    -webkit-touch-callout: none;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.planner button {
+    font-size: 14px;
+}

@@ -42,7 +42,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.token);
     return (
       <BrowserRouter>
       <AuthContext.Provider

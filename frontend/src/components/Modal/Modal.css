@@ -22,6 +22,27 @@
 .modal__content {
     padding: 1rem;
     text-align: center;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.modal__content input[type="text"],
+.modal__content textarea {
+    margin-bottom: 1rem;
+    padding: 0.7rem;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    background: #d3d3d3;
+    font-family: sans-serif;
+    resize: none;
+}
+
+.modal__content input::placeholder,
+.modal__content textarea::placeholder {
+    text-transform: uppercase;
+    color: black;
 }
 
 .modal__actions {
