@@ -4,7 +4,7 @@ module.exports = {
     getMyPlans: async (req, res, next) => {
         try {
             if(!req.isAuth) {
-                throw new Error('Unauthenticated!');
+                return res.status(200).json({result: 'authError'});
             }
             
             const plans = await Plan.find({Creator: req.userId});
@@ -17,7 +17,7 @@ module.exports = {
     addMyPlan: async (req, res, next) => {
         try {
             if(!req.isAuth) {
-                throw new Error('Unauthenticated!');
+                return res.status(200).json({result: 'authError'});
             }
 
             const date = req.body.date;
