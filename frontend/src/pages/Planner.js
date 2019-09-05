@@ -16,6 +16,7 @@ class PlannerPage extends Component {
     state = {
         date: new Date(),
         plans: [],
+        selectedPlans: [],
         isLoading: true,
         isEditing: false,
         isFail: false,
@@ -69,6 +70,7 @@ class PlannerPage extends Component {
                 const plans = resData;
                 if(this.isActive) {
                     this.setState({plans: plans, isLoading: false});
+                    this.fetchSelectedPlans(this.state.date);
                 }
             }
         })
@@ -78,6 +80,37 @@ class PlannerPage extends Component {
                 this.setState({isLoading: false});
             }
         });
+    }
+
+    fetchSelectedPlans(date) {
+        let result = this.state.plans.filter(plan => {
+            const planDate = new Date(plan.Date);
+            const deadlineDate = new Date(plan.Deadline);
+            if(deadlineDate.getTime() >= date.getTime()) {
+                switch(plan.RepeatOption) {
+                    case 'NoRepeat': {
+                        if(date === planDate) return true;
+                        else return false;
+                    }
+                    case 'Daily': {
+                        return true;
+                    }
+                    case 'Weekly': {
+                        if(date.getDay() === planDate.getDay()) return true;
+                        else return false;
+                    }
+                    case 'Monthly': {
+                        if(date.getDate() === planDate.getDate()) return true;
+                        else return false;
+                    }
+                    default: {
+                        return false;
+                    }
+                }
+            }
+            else return false;
+        });
+        this.setState({selectedPlans: result});
     }
 
     addButtonHandler = () => {
@@ -93,6 +126,7 @@ class PlannerPage extends Component {
             return false;
         }
         else {
+            this.dayEl.current.value = parseInt(this.dayEl.current.value) + 1;
             let requestBody = {
                 date: this.state.date,
                 deadline: new Date(`${this.yearEl.current.value}-${this.monthEl.current.value}-${this.dayEl.current.value}`),
@@ -139,16 +173,15 @@ class PlannerPage extends Component {
 
     onCalendarChange = date => {
         this.setState({ date });
+        this.fetchSelectedPlans(date);
     }
 
     markerTypeChangeHandler = (event) => {
         this.setState({markerType: event.target.value});
-        console.log(event.target.value);
     }
 
     repeatOptionChangeHandler = (event) => {
         this.setState({repeatOption: event.target.value});
-        console.log(event.target.value);
     }
     
     render() {
@@ -176,9 +209,9 @@ class PlannerPage extends Component {
                 <textarea rows="4" placeholder="Detail" ref={this.detailEl}></textarea>
                 <div className="repeatLabel">Deadline</div>
                 <div className="date-container">
-                    <input type="text" className="dateInput" placeholder="yyyy" ref={this.yearEl} value={this.state.date.getFullYear()}></input>
-                    <input type="text" className="dateInput" placeholder="mm" ref={this.monthEl} value={this.state.date.getMonth()+1}></input>
-                    <input type="text" className="dateInput" placeholder="dd" ref={this.dayEl} value={this.state.date.getDate()}></input>
+                    <input type="text" className="dateInput" placeholder="yyyy" ref={this.yearEl} defaultValue={this.state.date.getFullYear()}></input>
+                    <input type="text" className="dateInput" placeholder="mm" ref={this.monthEl} defaultValue={this.state.date.getMonth()+1}></input>
+                    <input type="text" className="dateInput" placeholder="dd" ref={this.dayEl} defaultValue={this.state.date.getDate()}></input>
                 </div>
                 <div className="repeatLabel">Marker Type</div>
                 <RepeatOption onChange={this.repeatOptionChangeHandler}/>
@@ -189,14 +222,14 @@ class PlannerPage extends Component {
             <div id="planner-container">
                 <Calendar
                     className="planner"
-                    onCalendarChange={this.onCalendarChange}
+                    onChange={this.onCalendarChange}
                     value={this.state.date}
                 />
                 <div id="plan-container">
                     <h1>My Plan</h1>
                     <hr />
                     <PlanList 
-                        plans={this.state.plans} 
+                        plans={this.state.selectedPlans}
                         userId={this.context.userId}
                     />
                     <div id="plan-addBtn-Container" onClick={this.addButtonHandler}><div id="plan-addBtn">+</div></div>

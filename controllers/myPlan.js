@@ -25,10 +25,12 @@ module.exports = {
             const title = req.body.title;
             const detail = req.body.detail;
             const marker = req.body.marker;
+            const deadline = req.body.deadline;
 
             const newPlan = new Plan({
                 Creator: req.userId,
                 Date: date,
+                Deadline: deadline,
                 RepeatOption: repeatOption,
                 Title: title,
                 Detail: detail,

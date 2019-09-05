@@ -12,6 +12,7 @@ const PlanList = props => {
                 id={plan._id}
                 creator={plan.Creator} 
                 date={plan.Date} 
+                deadline={plan.Deadline}
                 repeatOption={plan.Price}
                 title={plan.Title}
                 detail={plan.Detail}
