@@ -59,7 +59,7 @@ class PlannerPage extends Component {
         .then(resData => {
             if(resData && resData.result === 'authError') {
                 localStorage.clear();
-                this.state.token = null;
+                this.setState({token: null});
                 this.props.history.push('/auth');
             }
             else {
@@ -86,16 +86,16 @@ class PlannerPage extends Component {
     };
 
     modalConfirmHandler = () => {
-        if(!this.titleEl.current.value || !this.detailEl.current.value || !this.markerEl.current.value || !this.repeatOptionEl.current.value) {
+        if(!this.titleEl.current.value || !this.detailEl.current.value) {
             return false;
         }
         else {
             let requestBody = {
                 date: this.state.date,
-                repeatOption: this.repeatOptionEl.current.value,
+                repeatOption: this.state.repeatOption,
                 title: this.titleEl.current.value,
                 detail: this.detailEl.current.value,
-                marker: this.markerEl.current.value
+                marker: this.state.markerType
             };
 
             fetch('http://localhost:8000/planner', {
@@ -117,9 +117,8 @@ class PlannerPage extends Component {
                     this.fetchPlanner();
                 }
                 else {
-                    this.setState({isEditing: false, isFail: true});
+                    this.setState({isEditing: false, isFail: true, token: null});
                     localStorage.clear();
-                    this.state.token = null;
                     this.props.history.push('/auth');
                 }
             })
@@ -140,10 +139,12 @@ class PlannerPage extends Component {
 
     markerTypeChangeHandler = (event) => {
         this.setState({markerType: event.target.value});
+        console.log(event.target.value);
     }
 
     repeatOptionChangeHandler = (event) => {
         this.setState({repeatOption: event.target.value});
+        console.log(event.target.value);
     }
     
     render() {
