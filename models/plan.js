@@ -10,6 +10,10 @@ const planSchema = new Schema({
         type: Date,
         required: true
     },
+    Deadline: {
+        type: Date,
+        required: true
+    },
     RepeatOption: {
         type: String,
         required: true

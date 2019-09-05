@@ -30,6 +30,9 @@ class PlannerPage extends Component {
         super(props);
         this.titleEl = React.createRef();
         this.detailEl = React.createRef();
+        this.yearEl = React.createRef();
+        this.monthEl = React.createRef();
+        this.dayEl = React.createRef();
         // date, creator
     }
 
@@ -86,12 +89,13 @@ class PlannerPage extends Component {
     };
 
     modalConfirmHandler = () => {
-        if(!this.titleEl.current.value || !this.detailEl.current.value) {
+        if(!this.titleEl.current.value || !this.detailEl.current.value || !this.yearEl.current.value || !this.monthEl.current.value || !this.dayEl.current.value) {
             return false;
         }
         else {
             let requestBody = {
                 date: this.state.date,
+                deadline: new Date(`${this.yearEl.current.value}-${this.monthEl.current.value}-${this.dayEl.current.value}`),
                 repeatOption: this.state.repeatOption,
                 title: this.titleEl.current.value,
                 detail: this.detailEl.current.value,
@@ -170,6 +174,12 @@ class PlannerPage extends Component {
                 >
                 <input type="text" placeholder="Title" ref={this.titleEl}></input>
                 <textarea rows="4" placeholder="Detail" ref={this.detailEl}></textarea>
+                <div className="repeatLabel">Deadline</div>
+                <div className="date-container">
+                    <input type="text" className="dateInput" placeholder="yyyy" ref={this.yearEl} value={this.state.date.getFullYear()}></input>
+                    <input type="text" className="dateInput" placeholder="mm" ref={this.monthEl} value={this.state.date.getMonth()+1}></input>
+                    <input type="text" className="dateInput" placeholder="dd" ref={this.dayEl} value={this.state.date.getDate()}></input>
+                </div>
                 <div className="repeatLabel">Marker Type</div>
                 <RepeatOption onChange={this.repeatOptionChangeHandler}/>
                 <div className="markerLabel">Marker Type</div>

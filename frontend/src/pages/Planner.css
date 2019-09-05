@@ -78,3 +78,13 @@
 .markerLabel {
     margin-top: 1rem;
 }
+
+.date-container {
+    display: flex;
+    text-align: left;
+}
+
+.dateInput {
+    width: 7.4rem;
+    margin-right: 0.8rem;
+}
