@@ -65,3 +65,16 @@
 .planner button {
     font-size: 14px;
 }
+
+.markerLabel,
+.repeatLabel {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.markerLabel {
+    margin-top: 1rem;
+}

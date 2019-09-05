@@ -7,6 +7,8 @@ import PlanList from '../components/PlanList/PlanList';
 import Modal from '../components/Modal/Modal';
 import Backdrop from '../components/Backdrop/Backdrop';
 import Spinner from '../components/Spinner/Spinner';
+import MarkerType from '../components/MarkerType/MarkerType';
+import RepeatOption from '../components/RepeatOption/RepeatOption'
 
 import './Planner.css';
 
@@ -16,7 +18,9 @@ class PlannerPage extends Component {
         plans: [],
         isLoading: true,
         isEditing: false,
-        isFail: false
+        isFail: false,
+        markerType: 'game-pad',
+        repeatOption: 'NoRepeat'
     }
     isActive = true;
 
@@ -26,8 +30,6 @@ class PlannerPage extends Component {
         super(props);
         this.titleEl = React.createRef();
         this.detailEl = React.createRef();
-        this.markerEl = React.createRef();
-        this.repeatOptionEl = React.createRef();
         // date, creator
     }
 
@@ -55,9 +57,16 @@ class PlannerPage extends Component {
             return res.json();
         })
         .then(resData => {
-            const plans = resData;
-            if(this.isActive) {
-                this.setState({plans: plans, isLoading: false});
+            if(resData && resData.result === 'authError') {
+                localStorage.clear();
+                this.state.token = null;
+                this.props.history.push('/auth');
+            }
+            else {
+                const plans = resData;
+                if(this.isActive) {
+                    this.setState({plans: plans, isLoading: false});
+                }
             }
         })
         .catch(err => {
@@ -109,6 +118,9 @@ class PlannerPage extends Component {
                 }
                 else {
                     this.setState({isEditing: false, isFail: true});
+                    localStorage.clear();
+                    this.state.token = null;
+                    this.props.history.push('/auth');
                 }
             })
             .catch(err => {
@@ -126,6 +138,14 @@ class PlannerPage extends Component {
         this.setState({ date });
     }
 
+    markerTypeChangeHandler = (event) => {
+        this.setState({markerType: event.target.value});
+    }
+
+    repeatOptionChangeHandler = (event) => {
+        this.setState({repeatOption: event.target.value});
+    }
+    
     render() {
         return (
             <React.Fragment>
@@ -149,8 +169,10 @@ class PlannerPage extends Component {
                 >
                 <input type="text" placeholder="Title" ref={this.titleEl}></input>
                 <textarea rows="4" placeholder="Detail" ref={this.detailEl}></textarea>
-                <input type="text" placeholder="Marker" ref={this.markerEl}></input>
-                <input type="text" placeholder="Repeat Option" ref={this.repeatOptionEl}></input>
+                <div className="repeatLabel">Marker Type</div>
+                <RepeatOption onChange={this.repeatOptionChangeHandler}/>
+                <div className="markerLabel">Marker Type</div>
+                <MarkerType onChange={this.markerTypeChangeHandler}/>
             </Modal>}
             {!this.state.isLoading && !this.state.isEditing && 
             <div id="planner-container">
