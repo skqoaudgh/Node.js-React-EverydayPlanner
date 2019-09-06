@@ -18,10 +18,16 @@ class App extends Component {
 
   login = (token, userId, email) => {
     this.setState({token: token, userId: userId, userEmail: email});
+    if(localStorage.savedToken !== token || localStorage.savedUserId !== userId || localStorage.savedUserEmail !== email) {
+      localStorage.savedToken = token;
+      localStorage.savedUserId = userId;
+      localStorage.savedUserEmail = email;
+    }
   };
   
   logout = () => {
     this.setState({token: null, userId: null, userEmail: null});
+    localStorage.clear();
   };
 
   UNSAFE_componentWillMount() {
@@ -31,14 +37,6 @@ class App extends Component {
     if(savedToken !== 'null' && savedUserId !== 'null' && savedUserEmail !== 'null') {
       this.setState({token: savedToken, userId: savedUserId, userEmail: savedUserEmail});
     }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if(prevState.token !== this.state.token && prevState.userId !== this.state.userId && prevState.userEmail !== this.state.userEmail) {
-        localStorage.savedToken = this.state.token;
-        localStorage.savedUserId = this.state.userId;
-        localStorage.savedUserEmail = this.state.userEmail;
-      }
   }
 
   render() {
