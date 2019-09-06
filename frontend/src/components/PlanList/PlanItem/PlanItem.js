@@ -34,7 +34,7 @@ const planItem = props => (
             <div className="PlanBody-Container">
                 <h2>{props.title}</h2>
             </div>
-            <div class="dropdown">
+            <div className="dropdown">
                 <input type="checkbox" id={props.id} name="toggle" className="toggle" onChange={checkOneSelection}/>
                 <label htmlFor={props.id} className="toggleLabel"></label>
                 <div className="message">
@@ -44,7 +44,7 @@ const planItem = props => (
                         <div className="plan-date">{formatDate(props.date)}~{formatDate(props.deadline)}</div>
                     </div>
                     <p className="plan-detail">{props.detail}</p>
-                    <div class="delButton-container"><button>Delete</button></div>
+                    <div className="delButton-container"><button>Delete</button></div>
                 </div>
             </div>
         </div>
