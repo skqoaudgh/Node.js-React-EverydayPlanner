@@ -134,7 +134,6 @@
 
 .delButton-container button {
     text-decoration: none;
-    color: #dd6149;
     padding: 0.25rem 0.5rem;
     border: none;
     font: inherit;
@@ -142,14 +141,31 @@
     cursor: pointer;
     vertical-align: middle;
     margin: 0;
+    margin-left: 1rem;
     text-transform: uppercase;
     font-weight: bold;
-    border: 2px solid #dd6149;
     border-radius: 20px;
     outline: none;
 }
 
-.delButton-container button:hover {
+.delButton-container #item-delete {
+    
+    color: #dd6149;
+    border: 2px solid #dd6149;
+}
+
+.delButton-container #item-delete:hover {
     background: #dd6149;
+    color: white;
+}
+
+.delButton-container #item-modify {
+    
+    color: #49b3dd;
+    border: 2px solid #49b3dd;
+}
+
+.delButton-container #item-modify:hover {
+    background: #49b3dd;
     color: white;
 }

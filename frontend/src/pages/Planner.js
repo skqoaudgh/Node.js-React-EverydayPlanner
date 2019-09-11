@@ -20,6 +20,8 @@ class PlannerPage extends Component {
         isLoading: true,
         isEditing: false,
         isFail: false,
+        isManipulating: null,
+        manipulatedPlan: null,
         markerType: 'game-pad',
         repeatOption: 'NoRepeat'
     }
@@ -118,7 +120,7 @@ class PlannerPage extends Component {
     }
 
     modalCancelHandler = () => {
-        this.setState({isEditing: false, isFail: false});
+        this.setState({isEditing: false, isFail: false, isManipulating: null});
     };
 
     modalConfirmHandler = () => {
@@ -184,10 +186,88 @@ class PlannerPage extends Component {
         this.setState({repeatOption: event.target.value});
     }
     
+    itemModifyHandler = (plan) => {
+        this.setState({isManipulating: 'MODIFY', manipulatedPlan: plan});
+        console.log(plan);
+    }
+
+    modalItemModifyHandler = () => {
+        let requestBody = {
+            deadline: new Date(`${this.yearEl.current.value}-${this.monthEl.current.value}-${this.dayEl.current.value}`),
+            repeatOption: this.state.repeatOption,
+            title: this.titleEl.current.value,
+            detail: this.detailEl.current.value,
+            marker: this.state.markerType
+        };
+
+        fetch('http://localhost:8000/planner/'+this.state.manipulatedPlan._id, {
+            method: 'PUT',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': this.context.token
+            }
+        }).then(res => {
+            if(res.status !== 200 && res.status !== 201) {
+                throw new Error('Failed!');
+            }
+            return res.json();
+        })
+        .then(resData => {
+            if(resData.result === 'done') {
+                this.setState({isEditing: false, isFail: false, isManipulating: false});
+                this.fetchPlanner();
+            }
+            else {
+                this.setState({isEditing: false, isFail: true, isManipulating: false, token: null});
+                localStorage.clear();
+                this.props.history.push('/auth');
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            this.setState({isEditing: false, isFail: false, isManipulating: false});
+        });
+    }
+
+    itemDeleteHandler = (plan) => {
+        this.setState({isManipulating: 'DELETE', manipulatedPlan: plan});
+    }
+
+    modalItemDeleteHandler = async () => {
+        fetch('http://localhost:8000/planner/'+this.state.manipulatedPlan._id, {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': this.context.token
+            }
+        }).then(res => {
+            if(res.status !== 200 && res.status !== 201) {
+                throw new Error('Failed!');
+            }
+            return res.json();
+        })
+        .then(resData => {
+            if(resData.result === 'done') {
+                this.setState({isEditing: false, isFail: false, isManipulating: false});
+                this.fetchPlanner();
+            }
+            else {
+                this.setState({isEditing: false, isFail: true, isManipulating: false, token: null});
+                localStorage.clear();
+                this.props.history.push('/auth');
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            this.setState({isEditing: false, isFail: false, isManipulating: false});
+        });
+    }
+
     render() {
         return (
             <React.Fragment>
-            {(this.state.isLoading || this.state.isEditing || this.state.isFail) && <Backdrop />}
+            {(this.state.isLoading || this.state.isEditing || this.state.isFail || this.state.isManipulating) && <Backdrop />}
             {this.state.isLoading && <Spinner className="spinner"/>}
             {this.state.isFail && <Modal
                 title='ERROR'
@@ -218,7 +298,32 @@ class PlannerPage extends Component {
                 <div className="markerLabel">Marker Type</div>
                 <MarkerType onChange={this.markerTypeChangeHandler}/>
             </Modal>}
-            {!this.state.isLoading && !this.state.isEditing && 
+            {this.state.isManipulating && <Modal
+                title={(this.state.isManipulating==='DELETE')?'Delete plan':'Modify plan'}
+                canConfirm
+                canCancel
+                confirmText={(this.state.isManipulating==='DELETE')?'Delete':'Modify'}
+                onConfirm={(this.state.isManipulating==='DELETE')?this.modalItemDeleteHandler:this.modalItemModifyHandler}
+                onCancel={this.modalCancelHandler}
+                >
+                {(this.state.isManipulating==='DELETE')?
+                <p>Are you sure to delete this plan?</p>:
+                <React.Fragment>
+                    <input type="text" placeholder="Title" defaultValue={this.state.manipulatedPlan.Title} ref={this.titleEl}></input>
+                    <textarea rows="4" placeholder="Detail" defaultValue={this.state.manipulatedPlan.Detail} ref={this.detailEl}></textarea>
+                    <div className="repeatLabel">Deadline</div>
+                    <div className="date-container">
+                        <input type="text" className="dateInput" placeholder="yyyy" defaultValue={new Date(this.state.manipulatedPlan.Deadline).getFullYear()} ref={this.yearEl}></input>
+                        <input type="text" className="dateInput" placeholder="mm" defaultValue={new Date(this.state.manipulatedPlan.Deadline).getMonth()+1} ref={this.monthEl}></input>
+                        <input type="text" className="dateInput" placeholder="dd" defaultValue={new Date(this.state.manipulatedPlan.Deadline).getDate()} ref={this.dayEl}></input>
+                    </div>
+                    <div className="repeatLabel">Marker Type</div>
+                    <RepeatOption onChange={this.repeatOptionChangeHandler}/>
+                    <div className="markerLabel">Marker Type</div>
+                    <MarkerType onChange={this.markerTypeChangeHandler}/>
+                </React.Fragment>}
+            </Modal>}
+            {!this.state.isLoading && !this.state.isEditing && !this.state.isManipulating &&
             <div id="planner-container">
                 <Calendar
                     className="planner"
@@ -231,6 +336,8 @@ class PlannerPage extends Component {
                     <PlanList 
                         plans={this.state.selectedPlans}
                         userId={this.context.userId}
+                        itemModifyHandler={this.itemModifyHandler}
+                        itemDeleteHandler={this.itemDeleteHandler}
                     />
                     <div id="plan-addBtn-Container" onClick={this.addButtonHandler}><div id="plan-addBtn">+</div></div>
                 </div>

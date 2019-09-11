@@ -7,7 +7,8 @@ import './PlanList.css';
 const PlanList = props => {
     const plans = props.plans.map(plan => {
         return (
-            <PlanItem 
+            <PlanItem
+                plan={plan}
                 key={plan._id} 
                 id={plan._id}
                 creator={plan.Creator} 
@@ -18,6 +19,8 @@ const PlanList = props => {
                 detail={plan.Detail}
                 isDone={plan.IsDone}
                 marker={plan.Marker}
+                itemModifyHandler={props.itemModifyHandler}
+                itemDeleteHandler={props.itemDeleteHandler}
             />
         );
     });

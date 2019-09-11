@@ -44,7 +44,10 @@ const planItem = props => (
                         <div className="plan-date">{formatDate(props.date)}~{formatDate(props.deadline)}</div>
                     </div>
                     <p className="plan-detail">{props.detail}</p>
-                    <div className="delButton-container"><button>Delete</button></div>
+                    <div className="delButton-container">
+                        <button id="item-modify" onClick={props.itemModifyHandler.bind(this, props.plan)}>Modify</button>
+                        <button id="item-delete" onClick={props.itemDeleteHandler.bind(this, props.plan)}>Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
