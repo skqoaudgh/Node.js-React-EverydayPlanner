@@ -64,9 +64,7 @@ class PlannerPage extends Component {
         })
         .then(resData => {
             if(resData && resData.result === 'authError') {
-                localStorage.clear();
-                this.setState({token: null});
-                this.props.history.push('/auth');
+                this.context.logout();
             }
             else {
                 const plans = resData;
@@ -157,9 +155,7 @@ class PlannerPage extends Component {
                     this.fetchPlanner();
                 }
                 else {
-                    this.setState({isEditing: false, isFail: true, token: null});
-                    localStorage.clear();
-                    this.props.history.push('/auth');
+                    this.context.logout();
                 }
             })
             .catch(err => {
@@ -219,9 +215,7 @@ class PlannerPage extends Component {
                 this.fetchPlanner();
             }
             else {
-                this.setState({isEditing: false, isFail: true, isManipulating: false, token: null});
-                localStorage.clear();
-                this.props.history.push('/auth');
+                this.context.logout();
             }
         })
         .catch(err => {
@@ -253,9 +247,7 @@ class PlannerPage extends Component {
                 this.fetchPlanner();
             }
             else {
-                this.setState({isEditing: false, isFail: true, isManipulating: false, token: null});
-                localStorage.clear();
-                this.props.history.push('/auth');
+                this.context.logout();
             }
         })
         .catch(err => {
