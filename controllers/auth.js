@@ -1,6 +1,7 @@
 const User = require('../models/user');
-const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
+
+const rsa = require('../key/key');
 
 module.exports = async (req, res, next) => {
     if(req.body.type == 'REGIST') {
@@ -19,7 +20,7 @@ module.exports = async (req, res, next) => {
                 return res.status(200).json({error: 'Email'});
             }
 
-            const hashedPassword = await bcrypt.hashSync(pw);
+            const hashedPassword = rsa.encrypt(pw);
 
             const user = new User({
                 ID: id,
@@ -44,7 +45,7 @@ module.exports = async (req, res, next) => {
                 return res.status(200).json({error: 'LoginFail'});
             }
 
-            const isEqual = await bcrypt.compareSync(pw, user.Password);
+            const isEqual = (rsa.decrypt(user.Password) == pw)?true:false;
             if(!isEqual) {
                 return res.status(200).json({error: 'LoginFail'});
             }
