@@ -21,7 +21,6 @@
     justify-content: space-between;
     align-items: center;
     width: 30rem;
-    cursor: pointer;
 }
 
 .PlanItem-Container .PlanBody-Container h2 {
