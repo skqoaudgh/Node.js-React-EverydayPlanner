@@ -50,7 +50,7 @@ module.exports = async (req, res, next) => {
             }
     
             const token = jwt.sign({userId: user.id, userEmail: user.Email}, 'somesupersecretkey', {
-                expiresIn: '1h',
+                expiresIn: '24h',
             });
     
             return res.status(200).json({userId: user.id, token: 'bearer ' + token});
