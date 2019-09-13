@@ -7,7 +7,7 @@ module.exports = {
                 return res.status(200).json({result: 'authError'});
             }
             
-            const plans = await Plan.find({Creator: req.userId});
+            const plans = await Plan.find({Creator: req.userId}).sort({Date: 'asc'});
             return res.status(200).json(plans);
         }
         catch(err) {
