@@ -1,4 +1,5 @@
 const Plan =  require('../models/plan');
+const Check =  require('../models/check');
 
 module.exports = {
     getMyPlans: async (req, res, next) => {
@@ -89,5 +90,31 @@ module.exports = {
         }
 
         return res.status(200).json({result: 'done'});
+    }, 
+    checkPlan: async (req, res ,next) => {
+        if(!req.isAuth) {
+            return res.status(200).json({result: 'authError'});
+        }
+        
+        const id = req.params.id;
+        const plan = req.body.plan;
+        const date = req.body.date;
+
+        const isExist = Check.findOne({Creator: id, Plan: plan, Date: date});
+        if(!isExist) {
+            const newCheck = new Check({
+                Creator: id,
+                Plan: plan,
+                isChecked: true
+            });
+    
+            await newCheck.save();
+            return res.status(201).json({result: 'done'});
+        }
+        else {
+            isExist.isChecked = false;
+            await newCheck.save();
+            return res.status(201).json({result: 'done'});
+        }
     }
 }
