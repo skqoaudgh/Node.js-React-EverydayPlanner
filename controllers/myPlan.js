@@ -100,22 +100,35 @@ module.exports = {
         catch(err) {
             throw err;
         }
-    }, 
+    },
+    getChecks: async (req, res, next) => {
+        try {
+            if(!req.isAuth) {
+                return res.status(200).json({result: 'authError'});
+            }
+
+            const checks = await Check.find({Creator: req.userId}).sort({Date: 'asc'});
+            return res.status(200).json(checks);
+        }
+        catch(err) {
+            throw err;
+        }
+    },
     checkPlan: async (req, res ,next) => {
         try {
             if(!req.isAuth) {
                 return res.status(200).json({result: 'authError'});
             }
             
-            const id = req.params.id;
             const plan = req.body.plan;
             const date = req.body.date;
 
-            const isExist = Check.findOne({Creator: id, Plan: plan, Date: date});
+            const isExist = await Check.findOne({Creator: req.userId, Plan: plan, Date: date});
             if(!isExist) {
                 const newCheck = new Check({
-                    Creator: id,
+                    Creator: req.userId,
                     Plan: plan,
+                    Date: date,
                     isChecked: true
                 });
         
@@ -123,8 +136,8 @@ module.exports = {
                 return res.status(201).json({result: 'done'});
             }
             else {
-                isExist.isChecked = false;
-                await newCheck.save();
+                isExist.isChecked = !isExist.isChecked;
+                await isExist.save();
                 return res.status(201).json({result: 'done'});
             }
         }
