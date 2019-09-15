@@ -32,7 +32,14 @@ const planItem = props => (
                 <img src={require(`../../../materials/icons/${props.marker}.png`)} alt={alt} />
             </div>
             <div className="PlanBody-Container">
-                <h2>{props.title}</h2>
+                <div className="title-container">
+                    
+                    {props.isChecked?
+                        <input type="checkbox" value="none" className="check" name={props.id || ''} onChange={props.checkChangeHandler} checked={true}></input>:
+                        <input type="checkbox" value="none" className="check" name={props.id || ''} onChange={props.checkChangeHandler} checked={false}></input>
+                    } 
+                    <h2 className="planTitle">{props.title}</h2>
+                </div>
             </div>
             <div className="dropdown">
                 <input type="checkbox" id={props.id} name="toggle" className="toggle" onChange={checkOneSelection}/>

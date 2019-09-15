@@ -13,15 +13,17 @@ import RepeatOption from '../components/RepeatOption/RepeatOption'
 import './Planner.css';
 
 class PlannerPage extends Component {
+    date = new Date();
     state = {
-        date: new Date(),
+        date: new Date(new Date(this.date.getTime() + (this.date.getTimezoneOffset()*60*1000)).toISOString().split('T')[0]), 
         plans: [],
+        checks: [],
         selectedPlans: [],
         isLoading: true,
         isEditing: false,
         isFail: false,
-        isManipulating: null,
-        manipulatedPlan: null,
+        isManipulating: '',
+        manipulatedPlan: '',
         markerType: 'game-pad',
         repeatOption: 'NoRepeat'
     }
@@ -41,12 +43,13 @@ class PlannerPage extends Component {
 
     componentDidMount() {
         this.fetchPlanner();
+
     }
 
     componentWillUnmount() {
         this.isActive = false;
     }
-    
+
     fetchPlanner() {
         this.setState({isLoading: true});
 
@@ -69,8 +72,8 @@ class PlannerPage extends Component {
             else {
                 const plans = resData;
                 if(this.isActive) {
-                    this.setState({plans: plans, isLoading: false});
-                    this.fetchSelectedPlans(this.state.date);
+                    this.setState({plans: plans});
+                    this.fetchCheck();
                 }
             }
         })
@@ -83,9 +86,20 @@ class PlannerPage extends Component {
     }
 
     fetchSelectedPlans(date) {
-        let result = this.state.plans.filter(plan => {
+        let selectedPlans = this.state.plans.filter(plan => {
             const planDate = new Date(plan.Date);
             const deadlineDate = new Date(plan.Deadline);
+            plan.isChecked = false;
+
+            this.state.checks.forEach(check => {
+                const checkDate = new Date(check.Date);
+                checkDate.setHours(0);
+                if(date.getTime() === checkDate.getTime() && plan._id === check.Plan) {
+                    plan.isChecked = true;
+                    return;
+                }
+            });
+
             if(deadlineDate.getTime() >= date.getTime()) {
                 switch(plan.RepeatOption) {
                     case 'NoRepeat': {
@@ -110,7 +124,79 @@ class PlannerPage extends Component {
             }
             else return false;
         });
-        this.setState({selectedPlans: result});
+        this.setState({selectedPlans: selectedPlans});
+    }
+
+    fetchCheck() {
+        fetch('http://localhost:8000/planner/check', {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': this.context.token
+            }
+        }).then(res => {
+            if(res.status !== 200 && res.status !== 201) {
+                throw new Error('Failed!');
+            }
+            return res.json();
+        })
+        .then(resData => {
+            if(resData && resData.result === 'authError') {
+                this.context.logout();
+            }
+            else {
+                const checks = resData;
+                if(this.isActive) {
+                    this.setState({checks: checks, isLoading: false});
+                    this.state.date.setHours(0);
+                    this.fetchSelectedPlans(this.state.date);
+                }
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            if(this.isActive) {
+                this.setState({isLoading: false});
+            }
+        });
+    }
+
+    checkChangeHandler = (event) => {
+        event.persist();
+
+        let requestBody = {
+            plan: event.target.getAttribute('name'),
+            date: this.state.date
+        }
+        event.target.disabled = true;
+
+        fetch('http://localhost:8000/planner/check', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': this.context.token
+            }
+        }).then(res => {
+            if(res.status !== 200 && res.status !== 201) {
+                throw new Error('Failed!');
+            }
+            return res.json();
+        })
+        .then(resData => {
+            if(resData && resData.result === 'authError') {
+                this.context.logout();
+            }
+            else {
+                const result = resData.result;
+                if(result === 'done') {
+                    event.target.disabled = false;
+                }
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     addButtonHandler = () => {
@@ -118,7 +204,7 @@ class PlannerPage extends Component {
     }
 
     modalCancelHandler = () => {
-        this.setState({isEditing: false, isFail: false, isManipulating: null});
+        this.setState({isEditing: false, isFail: false, isManipulating: ''});
     };
 
     modalConfirmHandler = () => {
@@ -170,7 +256,7 @@ class PlannerPage extends Component {
     }
 
     onCalendarChange = date => {
-        this.setState({ date });
+        this.setState({date});
         this.fetchSelectedPlans(date);
     }
 
@@ -184,7 +270,6 @@ class PlannerPage extends Component {
     
     itemModifyHandler = (plan) => {
         this.setState({isManipulating: 'MODIFY', manipulatedPlan: plan});
-        console.log(plan);
     }
 
     modalItemModifyHandler = () => {
@@ -330,6 +415,7 @@ class PlannerPage extends Component {
                         userId={this.context.userId}
                         itemModifyHandler={this.itemModifyHandler}
                         itemDeleteHandler={this.itemDeleteHandler}
+                        checkChangeHandler={this.checkChangeHandler}
                     />
                     <div id="plan-addBtn-Container" onClick={this.addButtonHandler}><div id="plan-addBtn">+</div></div>
                 </div>

@@ -70,7 +70,7 @@
     font-weight: normal;
 }
 
-.toggle {
+.dropdown .toggle {
     position:absolute;
     appearance:none;
     cursor:pointer;
@@ -78,7 +78,7 @@
     top:-100%;
 }
 
-.toggle + label {
+.dropdown .toggle + label {
     position: absolute;
     top: 0.5rem;
     cursor: pointer;
@@ -167,4 +167,21 @@
 .delButton-container #item-modify:hover {
     background: #49b3dd;
     color: white;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+}
+
+.title-container .check {
+    position: relative;
+    top: 0.1rem;
+    margin-right: 1rem;
+    transform: scale(1.2);
+}
+
+.title-container .check:checked + .planTitle {
+    text-decoration: line-through;
+    text-decoration-color: red;
 }
