@@ -33,11 +33,7 @@ const planItem = props => (
             </div>
             <div className="PlanBody-Container">
                 <div className="title-container">
-                    
-                    {props.isChecked?
-                        <input type="checkbox" value="none" className="check" name={props.id || ''} onChange={props.checkChangeHandler} checked={true}></input>:
-                        <input type="checkbox" value="none" className="check" name={props.id || ''} onChange={props.checkChangeHandler} checked={false}></input>
-                    } 
+                    <input type="checkbox" value="none" className="check" name={props.id} onChange={props.checkChangeHandler} checked={props.isChecked}></input>
                     <h2 className="planTitle">{props.title}</h2>
                 </div>
             </div>

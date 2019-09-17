@@ -133,12 +133,12 @@ module.exports = {
                 });
         
                 await newCheck.save();
-                return res.status(201).json({result: 'done'});
+                return res.status(201).json({result: newCheck._id});
             }
             else {
                 isExist.isChecked = !isExist.isChecked;
                 await isExist.save();
-                return res.status(201).json({result: 'done'});
+                return res.status(201).json({result: isExist._id});
             }
         }
         catch(err) {

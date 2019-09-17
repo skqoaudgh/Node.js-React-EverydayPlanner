@@ -19,7 +19,7 @@ const PlanList = props => {
                 detail={plan.Detail}
                 isDone={plan.IsDone}
                 marker={plan.Marker}
-                isChecked={!!plan.isChecked}
+                isChecked={plan.isChecked}
                 itemModifyHandler={props.itemModifyHandler}
                 itemDeleteHandler={props.itemDeleteHandler}
                 checkChangeHandler={props.checkChangeHandler}

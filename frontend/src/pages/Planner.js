@@ -94,7 +94,7 @@ class PlannerPage extends Component {
             this.state.checks.forEach(check => {
                 const checkDate = new Date(check.Date);
                 checkDate.setHours(0);
-                if(date.getTime() === checkDate.getTime() && plan._id === check.Plan) {
+                if(date.getTime() === checkDate.getTime() && plan._id === check.Plan && check.isChecked) {
                     plan.isChecked = true;
                     return;
                 }
@@ -189,8 +189,18 @@ class PlannerPage extends Component {
             }
             else {
                 const result = resData.result;
-                if(result === 'done') {
+                if(result) {
                     event.target.disabled = false;
+
+                    this.state.checks.forEach(check => {
+                        const checkId = check._id;
+                        if(checkId === result) {
+                            check.isChecked = !check.isChecked;
+                            console.log(check.isChecked);
+                            return;
+                        }
+                    });
+                    this.fetchSelectedPlans(this.state.date);
                 }
             }
         })
