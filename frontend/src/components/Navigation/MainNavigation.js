@@ -14,6 +14,7 @@ const mainNavigation = props => (
                     </div>
                     <div className="main-navigation__item">
                         <ul>
+                            {context.token && <button onClick={() => {window.location.reload(false)}}>Refresh</button>}
                             {context.token && <button onClick={context.logout}>Logout</button>}
                         </ul>
                     </div>

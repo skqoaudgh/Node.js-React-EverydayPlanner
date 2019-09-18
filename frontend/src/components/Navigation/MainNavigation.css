@@ -50,8 +50,10 @@
     cursor: pointer;
     vertical-align: middle;
     margin: 0;
+    margin-left: 2rem;
     text-transform: uppercase;
     font-weight: bold;
+    outline: none;
 }
 
 .main-navigation__item a:hover,
